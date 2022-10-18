@@ -5,7 +5,8 @@
 </picture>
 <br><br>
 
-# coralnu 🪸 ~ coref resolution with spaCy `neuralcoref` + AllenNLP
+# coralnu 🪸
+## coref resolution with spaCy `neuralcoref` + AllenNLP
 > 💡 this repository stores the code for a flask inference wrapper for **coralnu** — a coreference resolution implementation that combines neuralcoref and AllenNLP — alongside scripts to deploy the code for inference using WSGI/Gunicorn.
 
 ### about coralnu
@@ -32,6 +33,7 @@ response = requests.request("POST", url, headers=headers, data=payload)
 
 print(response.text)
 ```
+
 
 ## References
 
