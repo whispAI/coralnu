@@ -3,9 +3,9 @@
   <source media="(prefers-color-scheme: dark)" srcset="https://i.imgur.com/xLIjgR0.png" height="30" align="right">
   <img align="right" src="https://i.imgur.com/aDti3wF.png" height="30">
 </picture>
-<br>
+<br><br>
 
-# coralnu 🪸 ~ coref resolution with `neuralcoref` + `AllenNLP`
+# coralnu 🪸 ~ coref resolution w `neuralcoref` + `AllenNLP`
 > 💡 this repository stores the code for a flask inference wrapper for **coralnu** — a coreference resolution implementation that combines neuralcoref and AllenNLP — alongside scripts to deploy the code for inference using WSGI/Gunicorn.
 
 ### about coralnu
