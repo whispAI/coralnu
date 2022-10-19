@@ -9,7 +9,7 @@ from intersection_strategies.fuzzy_intersection_strategy import FuzzyIntersectio
 
 
 def load_models():
-    allen_url = 'coref-spanbert-large-2020.02.27.tar.gz'
+    allen_url = 'https://storage.googleapis.com/allennlp-public-models/coref-spanbert-large-2020.02.27.tar.gz'
     predictor = Predictor.from_path(allen_url)
     nlp = spacy.load('en_core_web_sm')
     neuralcoref.add_to_pipe(nlp)
