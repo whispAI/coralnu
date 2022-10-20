@@ -1,7 +1,7 @@
 <!--- WHISP DEVELOPMENT LOGO ~ RESPONSIVE TO LIGHT/DARK MODE --->
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://i.imgur.com/xLIjgR0.png" height="30" align="right">
-  <img align="right" src="https://i.imgur.com/aDti3wF.png" height="30">
+  <source media="(prefers-color-scheme: dark)" srcset="https://i.imgur.com/xLIjgR0.png" height="37" align="right">
+  <img align="right" src="https://i.imgur.com/aDti3wF.png" height="37">
 </picture>
 <br><br>
 
@@ -13,12 +13,13 @@
 **coralnu** [cor-al-noo] performs **CO**reference **R**esolution with **Al**lennlp and **N**e**u**ralcoref using ensemble methods to achieve a fuzzy intersection. to combine the clusters identified by both spaCy `neuralcoref` and AllenNLP's `coref-spanbert-large`, coralnu uses a method of intersection that favours AllenNLP (owing to high GAP performance) as the ground truth, and includes all spans that partially overlap in `neuralcoref` and `AllenNLP` clusters, but prioritises the shorter span. Find out more in NeuroSYS's [blog post](https://neurosys.com/blog/effective-coreference-resolution-model) or browse the code.
 
 ### quickstart: make requests to the hosted endpoint
-**endpoint is currently offline**
+<img src="https://img.shields.io/badge/endpoint%20status-online-brightgreen">
+
 ```python
 import requests
 import json
 
-url = "https://nlp.whisp.dev/coref"
+url = "https://coralnu.whisp.dev/coref"
 
 payload = json.dumps({
   "text": [
@@ -33,7 +34,25 @@ response = requests.request("POST", url, headers=headers, data=payload)
 
 print(response.text)
 ```
-
+**Returns**
+```json
+{
+  "clusters" : [
+    [
+      [
+        6,
+        9
+      ],
+      [
+        31,
+        31
+      ]
+    ]
+  ],
+  "method" : "fuzzyIntersection",
+  "resolved" : "Born and raised in London, Daniel Day-Lewis excelled on stage at the National Youth Theatre, before being accepted at the Bristol Old Vic Theatre School, which Daniel Day-Lewis attended for 3 years"
+}
+```
 
 ## References
 
