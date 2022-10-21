@@ -15,24 +15,20 @@
 ### quickstart: make requests to the hosted endpoint
 <img src="https://img.shields.io/badge/endpoint%20status-online-brightgreen">
 
+**N.B.** There is an issue with the [coralnu.whisp.dev](https://coralnu.whisp.dev) endpoint, as the `nginx` proxy is refusing requests based on HTTP headers — to avoid this issue, please use the script below. Progress on this issue is being [tracked here](https://github.com/whispAI/coralnu/issues/2).
+
 ```python
 import requests
-import json
 
-url = "https://coralnu.whisp.dev/coref"
+def get_corefs(text):
+    url = "https://coralnu.whisp.dev/coref"
+    myobj = {'text': text}
+    x = requests.post(url, json = myobj)
+    return x.json()
 
-payload = json.dumps({
-  "text": [
-    "Born and raised in London, Daniel Day-Lewis excelled on stage at the National Youth Theatre, before being accepted at the Bristol Old Vic Theatre School, which he attended for three years"
-  ]
-})
-headers = {
-  'Content-Type': 'application/json'
-}
+text = "Born and raised in London, Daniel Day-Lewis excelled on stage at the National Youth Theatre, before being accepted at the Bristol Old Vic Theatre School, which he attended for three years."
 
-response = requests.request("POST", url, headers=headers, data=payload)
-
-print(response.text)
+get_corefs(text)
 ```
 **Returns**
 ```json

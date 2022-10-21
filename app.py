@@ -40,6 +40,9 @@ import logging
 import json
 import requests
 
+logging.basicConfig(filename='debug_events_lucafrost.log', level=logging.DEBUG)
+
+
 
 # FLASK ###########################################################################################
 
@@ -56,7 +59,7 @@ predictor, nlp = load_models()
 
 @app.route("/")
 def hello():
-    return "<h1 style='color:blue'>whisp.dev apis</h1>"
+    return "<h1 style='color:blue'>coref resolution</h1>"
 
 
 # coref resolution ------------------------------------------------------------------------
@@ -68,8 +71,11 @@ def coref():
     with a fuzzy intersection strategy.
     """
     # get the request data
-    data = request.get_json()
-    text = data['text']
+    try:
+        data = request.get_json()
+        text = data['text']
+    except Exception as e:
+        app.logger.debug(f'Error: {e}')
     
     fuzzy = FuzzyIntersectionStrategy(predictor, nlp)
     clusters = fuzzy.clusters(text)
