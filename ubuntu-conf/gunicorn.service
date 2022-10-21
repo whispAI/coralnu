@@ -1,0 +1,17 @@
+[Unit]
+Description=Gunicorn instance to serve flask app
+After=network.target
+
+[Service]
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/home/ubuntu/coralnu
+Restart=always
+RestartSec=30
+ExecStart=/usr/bin/gunicorn --timeout 30 --workers 2 --bind 0.0.0.0:8800 -m 007 app:app
+
+# 1 worker = 7 GB RAM needed on init
+# nginx is proxy_passing to 80 -> 8800
+
+[Install]
+WantedBy=multi-user.target
