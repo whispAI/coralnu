@@ -1,3 +1,4 @@
+import allennlp
 from allennlp.predictors.predictor import Predictor
 
 model_path = 'coref-spanbert-large-2020.02.27.tar.gz'
