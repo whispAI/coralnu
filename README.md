@@ -50,6 +50,36 @@ get_corefs(text)
 }
 ```
 
+### installation guide
+**N.B.** this guide has been prepared and tested on Ubuntu 20.04 running on an AWS [g4dn.xlarge] instance, equipped with an NVIDIA T4 GPU.
+
+**Initial Configuration**
+* Perform one-time initial updates with `sudo apt-get update` and `sudo apt-get upgrade`
+* Download the latest [Anaconda distribution](https://www.anaconda.com/products/distribution) installer, for example `curl -O https://repo.anaconda.com/archive/Anaconda3-2022.10-Linux-x86_64.sh`.
+  * Start the installation with `bash Anaconda3-2022.10-Linux-x86_64.sh` and follow the prompts
+* Set up your `conda` environment with `conda create --name coralnu python=3.7`
+
+**Install Dependencies**
+* Activate your new conda environment with `conda activate coralnu`, you should now begin to install the dependencies.
+* Install build tools as below:
+  * `conda install -c conda-forge gxx`
+  * `conda install -c conda-forge cxx-compiler`
+  * `sudo apt-get install python3-dev`
+* **Install AllenNLP:** first `‌pip install allennlp` then `pip install --pre allennlp-models`
+* At this point, you may wish to check that CUDA is configured correctly with a simple script as below...
+```py
+import torch
+x = torch.randn(10, 10, device='cuda')
+print(x)
+```
+  * You should receive a tensor as an output.
+* **Install Neuralcoref:** first, run `pip install spacy==2.1` to install the version of spaCy compatible with both coreference frameworks. Ensure to install a suitable spaCy model with `python -m spacy download en_core_web_sm`.
+  * Finally, install `neuralcoref` with `pip install neuralcoref --no-binary neuralcoref`
+
+**Prepare `flask` server**
+* Install Flask with `pip install flask`
+... will finish @lucafrost
+
 ## References
 
 | Implementation | Description | License |
