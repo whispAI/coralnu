@@ -51,34 +51,55 @@ get_corefs(text)
 ```
 
 ### installation guide
-**N.B.** this guide has been prepared and tested on Ubuntu 20.04 running on an AWS [g4dn.xlarge] instance, equipped with an NVIDIA T4 GPU.
+```sh
+#                    _   ʕっ•ᴥ•ʔっ       
+#    __ ___ _ _ __ _| |_ _ _  _ 
+#   / _/ _ \ '_/ _` | | ' \ || |
+#   \__\___/_| \__,_|_|_||_\_,_|
+#                             
+# INSTALLATION WALKTHROUGH
+# ~ working on Amazon Linux 2 on EC2 g4dn.xlarge instance ~
 
-**Initial Configuration**
-* Perform one-time initial updates with `sudo apt-get update` and `sudo apt-get upgrade`
-* Download the latest [Anaconda distribution](https://www.anaconda.com/products/distribution) installer, for example `curl -O https://repo.anaconda.com/archive/Anaconda3-2022.10-Linux-x86_64.sh`.
-  * Start the installation with `bash Anaconda3-2022.10-Linux-x86_64.sh` and follow the prompts
-* Set up your `conda` environment with `conda create --name coralnu python=3.7`
+sudo yum update
+sudo yum upgrade
+cd /tmp/
+wget https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-Linux-x86_64.sh
+bash Mambaforge-Linux-x86_64.sh
+# follow mamba setup procedure
+# close terminal/ssh connection & reconnect
 
-**Install Dependencies**
-* Activate your new conda environment with `conda activate coralnu`, you should now begin to install the dependencies.
-* Install build tools as below:
-  * `conda install -c conda-forge gxx`
-  * `conda install -c conda-forge cxx-compiler`
-  * `sudo apt-get install python3-dev`
-* **Install AllenNLP:** first `‌pip install allennlp` then `pip install --pre allennlp-models`
-* At this point, you may wish to check that CUDA is configured correctly with a simple script as below...
-```py
-import torch
-x = torch.randn(10, 10, device='cuda')
-print(x)
+# install clang deps
+mamba create -n coralnu python=3.7
+mamba activate coralnu
+mamba install git
+mamba install -c conda-forge gcc
+mamba install -c conda-forge cxx-compiler
+sudo yum install -y gcc kernel-devel-$(uname -r)
+
+# install NVIDIA drivers ~ N.B. IGNORE `cc` version check
+aws s3 cp --recursive s3://ec2-linux-nvidia-drivers/latest/ .
+chmod +x NVIDIA-Linux-x86_64*.run
+sudo CC=/usr/bin/gcc10-cc ./NVIDIA-Linux-x86_64*.run
+# reboot the instance & confirm CUDA is functional
+# option 1
+nvidia-smi -q | head
+# option 2
+python ~/coralnu/gpu/gpu-test.py
+
+# install coralnu deps
+pip install spacy=2.1.0 allennlp neuralcoref Flask
+pip install --pre allennlp-models
+python -m spacy download en_core_web_sm
+git clone https://github.com/whispAI/coralnu.git
+cd coralnu/gpu/
+# only required if model hasn't been downloaded via 
+git-lfs
+wget https://storage.googleapis.com/allennlp-public-models/coref-spanbert-large-2020.02.27.tar.gz
+
+# run the server (in debug mode)
+python app.py
+
 ```
-  * You should receive a tensor as an output.
-* **Install Neuralcoref:** first, run `pip install spacy==2.1` to install the version of spaCy compatible with both coreference frameworks. Ensure to install a suitable spaCy model with `python -m spacy download en_core_web_sm`.
-  * Finally, install `neuralcoref` with `pip install neuralcoref --no-binary neuralcoref`
-
-**Prepare `flask` server**
-* Install Flask with `pip install flask`
-... will finish @lucafrost
 
 ## References
 
