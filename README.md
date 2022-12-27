@@ -98,7 +98,7 @@ nvidia-smi -q | head
 python ~/coralnu/gpu/gpu-test.py
 
 # install coralnu deps
-pip install spacy=2.1.0 allennlp neuralcoref Flask
+pip install spacy==2.1.0 allennlp neuralcoref Flask
 pip install --pre allennlp-models
 python -m spacy download en_core_web_sm
 git clone https://github.com/whispAI/coralnu.git
