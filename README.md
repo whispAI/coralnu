@@ -33,24 +33,35 @@ get_corefs(text)
 **Returns**
 ```json
 {
-  "clusters" : [
-    [
-      [
-        6,
-        9
-      ],
-      [
-        31,
-        31
-      ]
-    ]
-  ],
+  "clusters" : [[[6,9],[31,31]]],
   "method" : "fuzzyIntersection",
   "resolved" : "Born and raised in London, Daniel Day-Lewis excelled on stage at the National Youth Theatre, before being accepted at the Bristol Old Vic Theatre School, which Daniel Day-Lewis attended for 3 years"
 }
 ```
 
-### installation guide
+### deployment guide
+**N.B.** these instructions have been tested on EC2 `g4dn` instances, equipped with NVIDIA T4 GPUs, running Amazon Linux 2. Some modifications may be necessary to deploy Coralnu on Ubuntu and other operating systems. This guide assumes a 'clean slate' on the server prior to installation.
+
+1. Install `mamba` package manager: `cd /tmp/ && wget https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-Linux-x86_64.sh`
+  * Execute the shell file you just downloaded, with `bash Mambaforge-Linux-x86_64.sh` and follow the on-screen prompts. Ensure to respond with 'yes' when prompted whether to run `conda init`.
+  * Once Mamba has been installed, terminate the ssh connection and re-launch your shell. Upon re-connecting to the instance, you should be in the base environment.
+2. Create a new environment for Coralnu with `mamba create -n coralnu python=3.7` and `mamba activate coralnu`
+3. Install CLang dependencies needed for CUDA, AllenNLP, and Neuralcoref...
+  * `mamba install -c conda-forge gcc cxx-compiler` and `sudo yum install -y gcc kernel-devel-$(uname -r)`
+  * add CC (gcc) to your path with `sudo CC=/usr/bin/gcc10-cc`
+4. You will now need to install the NVIDIA/CUDA drivers from AWS S3, this guide assumes that you have `awscli` configured.
+  * Download the drivers with `aws s3 cp --recursive s3://ec2-linux-nvidia-drivers/latest/ .` then execute the driver `./NVIDIA-Linux-x86_64*.run`
+    * For further information, see [AWS Docs: Install NVIDIA drivers on Linux instances](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/install-nvidia-driver.html#nvidia-driver-instance-type)
+  * Check whether the installation was successful with `nvidia-smi -q | head`
+5. Install Coralnu dependencies
+  * `pip install spacy=2.1.0 allennlp neuralcoref Flask`
+  * `pip install --pre allennlp-models`
+  * `python -m spacy download en_core_web_sm`
+6. Install `git` and clone the Coralnu repo
+  * `mamba install git && cd ~/ && git clone https://github.com/whispAI/coralnu.git`
+  * Download the spanBERT model with `cd ~/coralnu/gpu && wget https://storage.googleapis.com/allennlp-public-models/coref-spanbert-large-2020.02.27.tar.gz`
+7. Run the server with `python app.py`
+
 ```sh
 #                    _   ʕっ•ᴥ•ʔっ       
 #    __ ___ _ _ __ _| |_ _ _  _ 
